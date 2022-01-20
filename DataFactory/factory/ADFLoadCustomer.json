@@ -1,0 +1,9 @@
+{
+	"name": "ADFLoadCustomer",
+	"location": "germanywestcentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f1ccdf44-6acf-4779-875f-743ebc5a15c6",
+		"tenantId": "8a55a276-8c5e-4ef2-a7ae-2c17f64ca08d"
+	}
+}
