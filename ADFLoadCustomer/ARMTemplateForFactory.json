@@ -21,6 +21,175 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/CopyProductSource')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy Product file to Sink",
+				"activities": [
+					{
+						"name": "Copy_Product_Source",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "sourcefiles/input/products.xml"
+							},
+							{
+								"name": "Destination",
+								"value": "Demo.KI_Product"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['id']"
+										},
+										"sink": {
+											"name": "ProductID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['name']"
+										},
+										"sink": {
+											"name": "Name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['description']"
+										},
+										"sink": {
+											"name": "Description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['brand']"
+										},
+										"sink": {
+											"name": "Brand",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['color']"
+										},
+										"sink": {
+											"name": "Color",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['barcode']"
+										},
+										"sink": {
+											"name": "Barcode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['origin']"
+										},
+										"sink": {
+											"name": "Origin",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['material']"
+										},
+										"sink": {
+											"name": "Material",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['size']"
+										},
+										"sink": {
+											"name": "Size",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['dataset']['record'][0]['price']"
+										},
+										"sink": {
+											"name": "Price",
+											"type": "Int32"
+										}
+									}
+								],
+								"collectionReference": "$['dataset']['record']"
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_jnw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_jnw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_jnw')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_jnw')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_Load_Customer')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -130,6 +299,140 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CustomerTransformed')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SourceBlobStore",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "transformed",
+						"container": "sourcefiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SourceBlobStore')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_jnw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SQLDBSink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ValidToDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Origin",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Material",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Size",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Price",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "InsertDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ValidFromDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ProductID",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Description",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Brand",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Color",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "Barcode",
+						"type": "nvarchar",
+						"precision": 0,
+						"scale": 0
+					},
+					{
+						"name": "SKProdID",
+						"type": "int",
+						"precision": 10,
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "Demo",
+					"table": "KI_Product"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SQLDBSink')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/KIcustomerDimension')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -201,6 +504,30 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SQLDBSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_jnw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SourceBlobStore",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "products.xml",
+						"folderPath": "input",
+						"container": "sourcefiles"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SourceBlobStore')]"
 			]
 		},
 		{
@@ -282,34 +609,6 @@
 				"[concat(variables('factoryId'), '/datasets/CustomerSource')]",
 				"[concat(variables('factoryId'), '/datasets/KIcustomerDimension')]",
 				"[concat(variables('factoryId'), '/datasets/CustomerTransformed')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CustomerTransformed')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SourceBlobStore",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": "transformed",
-						"container": "sourcefiles"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SourceBlobStore')]"
 			]
 		}
 	]
