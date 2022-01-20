@@ -136,7 +136,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_jnw')]",
+			"name": "[concat(parameters('factoryName'), '/KIProductDimension')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -316,7 +316,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_jnw')]",
+			"name": "[concat(parameters('factoryName'), '/ProductSource')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -377,7 +377,8 @@
 								},
 								"formatSettings": {
 									"type": "XmlReadSettings",
-									"validationMode": "none"
+									"validationMode": "xsd",
+									"detectDataType": true
 								}
 							},
 							"sink": {
@@ -483,14 +484,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_jnw",
+								"referenceName": "ProductSource",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_jnw",
+								"referenceName": "KIProductDimension",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -504,8 +505,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_jnw')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_jnw')]"
+				"[concat(variables('factoryId'), '/datasets/ProductSource')]",
+				"[concat(variables('factoryId'), '/datasets/KIProductDimension')]"
 			]
 		},
 		{
