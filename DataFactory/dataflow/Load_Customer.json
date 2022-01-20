@@ -24,7 +24,7 @@
 					"description": "Validate Gender Attribute values"
 				}
 			],
-			"script": "source(output(\n\t\tid as string,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomerSource\nCustomerSource select(mapColumn(\n\t\tSourceID = id,\n\t\tFirstName = first_name,\n\t\tLastName = last_name,\n\t\tEmail = email,\n\t\tGender = gender,\n\t\tCountry = country,\n\t\tAddress = address\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MappingAttributes\nMappingAttributes derive(Gender = case( Gender=='Male','Male',Gender=='Female','Female',NULL )) ~> ValidateGender"
+			"script": "source(output(\n\t\tid as string,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomerSource\nCustomerSource select(mapColumn(\n\t\tSourceID = id,\n\t\tFirstName = first_name,\n\t\tLastName = last_name,\n\t\tEmail = email,\n\t\tGender = gender,\n\t\tCountry = country,\n\t\tAddress = address\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MappingAttributes\nMappingAttributes derive(Gender = case(case( Gender=='Male',1,Gender=='Female',2)==1,'Male','Female')) ~> ValidateGender"
 		}
 	}
 }
