@@ -34,7 +34,8 @@
 						},
 						"formatSettings": {
 							"type": "XmlReadSettings",
-							"validationMode": "none"
+							"validationMode": "none",
+							"detectDataType": true
 						}
 					},
 					"sink": {
@@ -140,13 +141,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_jnw",
+						"referenceName": "ProductSource",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_jnw",
+						"referenceName": "KIProductDimension",
 						"type": "DatasetReference"
 					}
 				]
