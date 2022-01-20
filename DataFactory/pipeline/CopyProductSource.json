@@ -4,7 +4,7 @@
 		"description": "Copy Product file to Sink",
 		"activities": [
 			{
-				"name": "Copy_jnw",
+				"name": "Copy_Product_Source",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
