@@ -5,6 +5,7 @@
 		"activities": [
 			{
 				"name": "Load_Customer",
+				"description": "Load Customer file to Sink",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
