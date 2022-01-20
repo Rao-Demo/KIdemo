@@ -5,6 +5,7 @@
 		"activities": [
 			{
 				"name": "Load_Customer",
+				"description": "To load the Customer data",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
