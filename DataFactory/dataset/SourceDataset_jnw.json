@@ -1,0 +1,19 @@
+{
+	"name": "SourceDataset_jnw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SourceBlobStore",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Xml",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "products.xml",
+				"folderPath": "input",
+				"container": "sourcefiles"
+			}
+		}
+	}
+}
