@@ -47,7 +47,8 @@
 								"parameters": {},
 								"datasetParameters": {
 									"CustomerSource": {},
-									"CustomerSink": {}
+									"CustomerSink": {},
+									"CustomerProcessed": {}
 								}
 							},
 							"staging": {},
@@ -236,6 +237,14 @@
 								"type": "DatasetReference"
 							},
 							"name": "CustomerSink"
+						},
+						{
+							"linkedService": {
+								"referenceName": "SourceBlobStore",
+								"type": "LinkedServiceReference"
+							},
+							"name": "CustomerProcessed",
+							"description": "The transformed Customer data is saved in Blob Storage"
 						}
 					],
 					"transformations": [
@@ -248,12 +257,13 @@
 							"description": "Validate Gender Attribute values"
 						}
 					],
-					"script": "source(output(\n\t\tid as integer,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomerSource\nCustomerSource select(mapColumn(\n\t\tCustomerID = id,\n\t\tFirstName = first_name,\n\t\tLastName = last_name,\n\t\tEmail = email,\n\t\tGender = gender,\n\t\tCountry = country,\n\t\tAddress = address\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MappingAttributes\nMappingAttributes derive(Gender = case(case( Gender=='Male',1,Gender=='Female',2)==1,'Male',\r\n     case( Gender=='Male',1,Gender=='Female',2)==2,'Female')) ~> ValidateGender\nValidateGender sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tSKCustID as integer,\n\t\tCustomerID as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tGender as string,\n\t\tCountry as string,\n\t\tAddress as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCustomerID,\n\t\tFirstName,\n\t\tLastName,\n\t\tEmail,\n\t\tGender,\n\t\tCountry,\n\t\tAddress\n\t)) ~> CustomerSink"
+					"script": "source(output(\n\t\tid as integer,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomerSource\nCustomerSource select(mapColumn(\n\t\tCustomerID = id,\n\t\tFirstName = first_name,\n\t\tLastName = last_name,\n\t\tEmail = email,\n\t\tGender = gender,\n\t\tCountry = country,\n\t\tAddress = address\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MappingAttributes\nMappingAttributes derive(Gender = case(case( Gender=='Male',1,Gender=='Female',2)==1,'Male',\r\n     case( Gender=='Male',1,Gender=='Female',2)==2,'Female')) ~> ValidateGender\nValidateGender sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tSKCustID as integer,\n\t\tCustomerID as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tGender as string,\n\t\tCountry as string,\n\t\tAddress as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCustomerID,\n\t\tFirstName,\n\t\tLastName,\n\t\tEmail,\n\t\tGender,\n\t\tCountry,\n\t\tAddress\n\t)) ~> CustomerSink\nValidateGender sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delta',\n\tcompressionType: 'snappy',\n\tcompressionLevel: 'Fastest',\n\tcontainer: 'sourcefiles',\n\tfolderPath: 'transformed',\n\ttruncate:true,\n\tmergeSchema: false,\n\tautoCompact: false,\n\toptimizedWrite: false,\n\tvacuum: 0,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tfilePattern:'CustomerTransformed',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCustomerID,\n\t\tFirstName,\n\t\tLastName,\n\t\tEmail,\n\t\tGender,\n\t\tCountry,\n\t\tAddress\n\t)) ~> CustomerProcessed"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/CustomerSource')]",
-				"[concat(variables('factoryId'), '/datasets/KIcustomerDimension')]"
+				"[concat(variables('factoryId'), '/datasets/KIcustomerDimension')]",
+				"[concat(variables('factoryId'), '/linkedServices/SourceBlobStore')]"
 			]
 		}
 	]
