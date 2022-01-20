@@ -9,12 +9,12 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "CustomerID",
+				"name": "SKCustID",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "SourceID",
+				"name": "CustomerID",
 				"type": "int",
 				"precision": 10
 			},
