@@ -1,0 +1,157 @@
+{
+	"name": "CopyProductSource",
+	"properties": {
+		"description": "Copy Product file to Sink",
+		"activities": [
+			{
+				"name": "Copy_jnw",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sourcefiles/input/products.xml"
+					},
+					{
+						"name": "Destination",
+						"value": "Demo.KI_Product"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "XmlSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "XmlReadSettings",
+							"validationMode": "none"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['id']"
+								},
+								"sink": {
+									"name": "ProductID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['name']"
+								},
+								"sink": {
+									"name": "Name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['description']"
+								},
+								"sink": {
+									"name": "Description",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['brand']"
+								},
+								"sink": {
+									"name": "Brand",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['color']"
+								},
+								"sink": {
+									"name": "Color",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['barcode']"
+								},
+								"sink": {
+									"name": "Barcode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['origin']"
+								},
+								"sink": {
+									"name": "Origin",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['material']"
+								},
+								"sink": {
+									"name": "Material",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['size']"
+								},
+								"sink": {
+									"name": "Size",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataset']['record'][0]['price']"
+								},
+								"sink": {
+									"name": "Price",
+									"type": "Int32"
+								}
+							}
+						],
+						"collectionReference": "$['dataset']['record']"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_jnw",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_jnw",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
