@@ -18,7 +18,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Load_Customer",
+						"referenceName": "Load_Customer_Stage",
 						"type": "DataFlowReference"
 					},
 					"compute": {
