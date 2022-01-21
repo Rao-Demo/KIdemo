@@ -16,10 +16,10 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "KIcustomerDimension",
+						"referenceName": "CustomerStaging",
 						"type": "DatasetReference"
 					},
-					"name": "CustomerSink"
+					"name": "CustomerStaging"
 				}
 			],
 			"transformations": [
@@ -28,7 +28,7 @@
 					"description": "Renaming the attributes and remove duplicates"
 				}
 			],
-			"script": "source(output(\n\t\tid as integer,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomerSource\nCustomerSource select(mapColumn(\n\t\tCustomerID = id,\n\t\tFirstName = first_name,\n\t\tLastName = last_name,\n\t\tEmail = email,\n\t\tGender = gender,\n\t\tCountry = country,\n\t\tAddress = address\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MappingAttributes\nMappingAttributes sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tSKCustID as integer,\n\t\tCustomerID as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tGender as string,\n\t\tCountry as string,\n\t\tAddress as string,\n\t\tInsertDate as timestamp,\n\t\tValidFromDate as timestamp,\n\t\tValidToDate as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCustomerID,\n\t\tFirstName,\n\t\tLastName,\n\t\tEmail,\n\t\tGender,\n\t\tCountry,\n\t\tAddress,\n\t\tInsertDate,\n\t\tValidFromDate,\n\t\tValidToDate\n\t)) ~> CustomerSink"
+			"script": "source(output(\n\t\tid as integer,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomerSource\nCustomerSource select(mapColumn(\n\t\tCustomerID = id,\n\t\tFirstName = first_name,\n\t\tLastName = last_name,\n\t\tEmail = email,\n\t\tGender = gender,\n\t\tCountry = country,\n\t\tAddress = address\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MappingAttributes\nMappingAttributes sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCustomerID as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tGender as string,\n\t\tCountry as string,\n\t\tAddress as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCustomerID,\n\t\tFirstName,\n\t\tLastName,\n\t\tEmail,\n\t\tGender,\n\t\tCountry,\n\t\tAddress\n\t)) ~> CustomerStaging"
 		}
 	}
 }
