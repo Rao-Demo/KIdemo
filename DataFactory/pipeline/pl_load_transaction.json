@@ -94,7 +94,7 @@
 								},
 								"sink": {
 									"name": "TotalPrice",
-									"type": "Int32"
+									"type": "Decimal"
 								}
 							},
 							{
@@ -106,7 +106,8 @@
 									"type": "String"
 								}
 							}
-						]
+						],
+						"collectionReference": ""
 					}
 				},
 				"inputs": [
