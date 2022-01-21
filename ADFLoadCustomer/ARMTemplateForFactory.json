@@ -362,7 +362,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "KITransactionDimension",
+								"referenceName": "KITransactionFact",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -377,7 +377,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/TransactionSource')]",
-				"[concat(variables('factoryId'), '/datasets/KITransactionDimension')]"
+				"[concat(variables('factoryId'), '/datasets/KITransactionFact')]"
 			]
 		},
 		{
@@ -468,7 +468,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/KITransactionDimension')]",
+			"name": "[concat(parameters('factoryName'), '/KITransactionFact')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
