@@ -136,7 +136,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_lmm')]",
+			"name": "[concat(parameters('factoryName'), '/KITransactionDimension')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -150,20 +150,17 @@
 					{
 						"name": "SKTnxID",
 						"type": "int",
-						"precision": 10,
-						"scale": 0
+						"precision": 10
 					},
 					{
 						"name": "TransactionID",
 						"type": "int",
-						"precision": 10,
-						"scale": 0
+						"precision": 10
 					},
 					{
 						"name": "CustomerID",
 						"type": "int",
-						"precision": 10,
-						"scale": 0
+						"precision": 10
 					},
 					{
 						"name": "datetime",
@@ -174,26 +171,22 @@
 					{
 						"name": "ProductID",
 						"type": "int",
-						"precision": 10,
-						"scale": 0
+						"precision": 10
 					},
 					{
 						"name": "Quantity",
 						"type": "int",
-						"precision": 10,
-						"scale": 0
+						"precision": 10
 					},
 					{
 						"name": "TotalPrice",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
+						"type": "money",
+						"precision": 19,
+						"scale": 4
 					},
 					{
 						"name": "Comments",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
+						"type": "nvarchar"
 					},
 					{
 						"name": "InsertDate",
@@ -812,14 +805,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_lmm",
+								"referenceName": "TransactionSource",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_lmm",
+								"referenceName": "KITransactionDimension",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -833,8 +826,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_lmm')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_lmm')]"
+				"[concat(variables('factoryId'), '/datasets/TransactionSource')]",
+				"[concat(variables('factoryId'), '/datasets/KITransactionDimension')]"
 			]
 		},
 		{
