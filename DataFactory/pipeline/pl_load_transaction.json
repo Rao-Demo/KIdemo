@@ -111,13 +111,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_lmm",
+						"referenceName": "TransactionSource",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_lmm",
+						"referenceName": "KITransactionDimension",
 						"type": "DatasetReference"
 					}
 				]
