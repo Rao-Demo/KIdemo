@@ -1,0 +1,45 @@
+{
+	"name": "TransactionSource",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SourceBlobStore",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "transactions.json",
+				"folderPath": "input",
+				"container": "sourcefiles"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"customer_id": {
+					"type": "integer"
+				},
+				"datetime": {
+					"type": "string"
+				},
+				"product_id": {
+					"type": "integer"
+				},
+				"quantity": {
+					"type": "integer"
+				},
+				"total_price": {
+					"type": "number"
+				},
+				"comments": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
