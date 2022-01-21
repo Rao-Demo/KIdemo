@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_lmm",
+				"name": "CopyTransactionSource",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
