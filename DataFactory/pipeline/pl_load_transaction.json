@@ -117,7 +117,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "KITransactionDimension",
+						"referenceName": "KITransactionFact",
 						"type": "DatasetReference"
 					}
 				]
