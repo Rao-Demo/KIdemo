@@ -521,6 +521,57 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CustomerStaging')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SQLDBSink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FirstName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Gender",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Demo",
+					"table": "KI_Customer_STG"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SQLDBSink')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CopyProductSource')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -885,6 +936,46 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Load_Customer_Stage')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Loading Customer data to Stage",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CustomerSource",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerSource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CustomerStaging",
+								"type": "DatasetReference"
+							},
+							"name": "CustomerStaging"
+						}
+					],
+					"transformations": [
+						{
+							"name": "MappingAttributes",
+							"description": "Renaming the attributes and remove duplicates"
+						}
+					],
+					"script": "source(output(\n\t\tid as integer,\n\t\tfirst_name as string,\n\t\tlast_name as string,\n\t\temail as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CustomerSource\nCustomerSource select(mapColumn(\n\t\tCustomerID = id,\n\t\tFirstName = first_name,\n\t\tLastName = last_name,\n\t\tEmail = email,\n\t\tGender = gender,\n\t\tCountry = country,\n\t\tAddress = address\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MappingAttributes\nMappingAttributes sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCustomerID as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tGender as string,\n\t\tCountry as string,\n\t\tAddress as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCustomerID,\n\t\tFirstName,\n\t\tLastName,\n\t\tEmail,\n\t\tGender,\n\t\tCountry,\n\t\tAddress\n\t)) ~> CustomerStaging"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CustomerSource')]",
+				"[concat(variables('factoryId'), '/datasets/CustomerStaging')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_Load_Customer')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -906,13 +997,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "Load_Customer",
+								"referenceName": "Load_Customer_Stage",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
 									"CustomerSource": {},
-									"CustomerSink": {},
-									"CustomerProcessed": {}
+									"CustomerStaging": {}
 								}
 							},
 							"staging": {},
@@ -931,7 +1021,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Load_Customer')]"
+				"[concat(variables('factoryId'), '/dataflows/Load_Customer_Stage')]"
 			]
 		}
 	]
