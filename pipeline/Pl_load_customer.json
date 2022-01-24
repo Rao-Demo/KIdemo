@@ -19,6 +19,13 @@
 						"referenceName": "SourcetoStg",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "BLOB_kidemostorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "sourcefiles/input"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -49,6 +56,13 @@
 					"dataflow": {
 						"referenceName": "StgtoDim",
 						"type": "DataFlowReference"
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "syn-demo-sqlserver-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "syndemocontainer/Input"
 					},
 					"compute": {
 						"coreCount": 8,
