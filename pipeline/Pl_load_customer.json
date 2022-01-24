@@ -59,10 +59,10 @@
 					},
 					"staging": {
 						"linkedService": {
-							"referenceName": "syn-demo-sqlserver-WorkspaceDefaultStorage",
+							"referenceName": "BLOB_kidemostorage",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "syndemocontainer/Input"
+						"folderPath": "sourcefiles/input"
 					},
 					"compute": {
 						"coreCount": 8,
