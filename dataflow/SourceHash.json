@@ -1,0 +1,40 @@
+{
+	"name": "SourceHash",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CustomerStaging",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerStage"
+				},
+				{
+					"dataset": {
+						"referenceName": "CustomerView",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerView"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "HashSource"
+				},
+				{
+					"name": "HashDimension"
+				},
+				{
+					"name": "HashInsert"
+				},
+				{
+					"name": "Insertattributes"
+				}
+			],
+			"script": "source(output(\n\t\tCustomerID as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tGender as string,\n\t\tCountry as string,\n\t\tAddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> CustomerStage\nsource(output(\n\t\tSKCustID as integer,\n\t\tCustomerID as integer,\n\t\tFirstName as string,\n\t\tLastName as string,\n\t\tEmail as string,\n\t\tGender as string,\n\t\tCountry as string,\n\t\tAddress as string,\n\t\tIsActive as integer,\n\t\tInsertDate as timestamp,\n\t\tValidFromDate as date,\n\t\tValidToDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> CustomerView\nCustomerStage derive(SrcHash = md5(CustomerID)) ~> HashSource\nCustomerView derive(DimHash = md5(CustomerID)) ~> HashDimension\nHashSource, HashDimension exists(SrcHash == DimHash,\n\tnegate:true,\n\tbroadcast: 'auto')~> HashInsert\nHashInsert derive(Gender = case(case( Gender=='Male',1,Gender=='Female',2)==1,'Male',\r\n     case( Gender=='Male',1,Gender=='Female',2)==2,'Female'),\n\t\tIsActive = 1,\n\t\tInsertDate = currentUTC('dd-MM-yyyy hh:mm'),\n\t\tValidFromDate = currentUTC('dd-MM-yyyy'),\n\t\tValidToDate = toDate('99993112','yyyyddMM')) ~> Insertattributes"
+		}
+	}
+}
