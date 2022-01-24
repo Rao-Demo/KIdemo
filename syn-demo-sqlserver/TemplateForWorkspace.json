@@ -103,10 +103,10 @@
 							},
 							"staging": {
 								"linkedService": {
-									"referenceName": "syn-demo-sqlserver-WorkspaceDefaultStorage",
+									"referenceName": "BLOB_kidemostorage",
 									"type": "LinkedServiceReference"
 								},
-								"folderPath": "syndemocontainer/Input"
+								"folderPath": "sourcefiles/input"
 							},
 							"compute": {
 								"coreCount": 8,
@@ -126,8 +126,7 @@
 				"[concat(variables('workspaceId'), '/dataflows/SourcetoStg')]",
 				"[concat(variables('workspaceId'), '/linkedServices/BLOB_kidemostorage')]",
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/StgtoDim')]",
-				"[concat(variables('workspaceId'), '/linkedServices/syn-demo-sqlserver-WorkspaceDefaultStorage')]"
+				"[concat(variables('workspaceId'), '/dataflows/StgtoDim')]"
 			]
 		},
 		{
