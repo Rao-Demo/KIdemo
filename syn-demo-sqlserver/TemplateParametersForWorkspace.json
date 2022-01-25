@@ -16,6 +16,9 @@
 		},
 		"syn-demo-sqlserver-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://syndemoadlsgen2.dfs.core.windows.net"
+		},
+		"linkedServiceforpolybase_properties_typeProperties_url": {
+			"value": "https://syndemoadlsgen2.dfs.core.windows.net"
 		}
 	}
 }

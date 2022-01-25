@@ -22,6 +22,10 @@
 		"syn-demo-sqlserver-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://syndemoadlsgen2.dfs.core.windows.net"
+		},
+		"linkedServiceforpolybase_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://syndemoadlsgen2.dfs.core.windows.net"
 		}
 	},
 	"variables": {
@@ -90,7 +94,7 @@
 							"enableStaging": true,
 							"stagingSettings": {
 								"linkedServiceName": {
-									"referenceName": "syn-demo-sqlserver-WorkspaceDefaultStorage",
+									"referenceName": "linkedServiceforpolybase",
 									"type": "LinkedServiceReference"
 								},
 								"path": "syndemocontainer/Input"
@@ -196,7 +200,7 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/CustomerBlobSource')]",
 				"[concat(variables('workspaceId'), '/datasets/CustomerStaging')]",
-				"[concat(variables('workspaceId'), '/linkedServices/syn-demo-sqlserver-WorkspaceDefaultStorage')]"
+				"[concat(variables('workspaceId'), '/linkedServices/linkedServiceforpolybase')]"
 			]
 		},
 		{
@@ -764,6 +768,25 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/linkedServiceforpolybase')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('linkedServiceforpolybase_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
 		}
 	]
 }
