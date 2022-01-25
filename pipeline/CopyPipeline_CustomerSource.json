@@ -48,7 +48,7 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "syn-demo-sqlserver-WorkspaceDefaultStorage",
+							"referenceName": "linkedServiceforpolybase",
 							"type": "LinkedServiceReference"
 						},
 						"path": "syndemocontainer/Input"
