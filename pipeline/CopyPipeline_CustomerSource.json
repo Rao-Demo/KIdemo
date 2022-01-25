@@ -41,8 +41,9 @@
 						"preCopyScript": "Truncate table [dbo].[KI_Customer_STG]",
 						"allowPolyBase": true,
 						"polyBaseSettings": {
-							"rejectValue": 0,
-							"rejectType": "value",
+							"rejectValue": 10,
+							"rejectType": "percentage",
+							"rejectSampleValue": 1000,
 							"useTypeDefault": true
 						},
 						"disableMetricsCollection": false
@@ -54,6 +55,21 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "sourcefiles"
+					},
+					"enableSkipIncompatibleRow": true,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "linkedServicepolbaseblob",
+								"type": "LinkedServiceReference"
+							},
+							"path": "rejecteddata"
+						}
 					},
 					"translator": {
 						"type": "TabularTranslator",
