@@ -1093,7 +1093,7 @@
 								},
 								"inp_SLNo": {
 									"value": {
-										"value": "@activity('LookupSlNo').output.FirstRow.SlNo",
+										"value": "@activity('LookupSlNo').output.value",
 										"type": "Expression"
 									},
 									"type": "Int32"
