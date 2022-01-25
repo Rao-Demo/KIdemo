@@ -3,47 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "SourcetoStg",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "1.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "SourcetoStg",
-						"type": "DataFlowReference"
-					},
-					"staging": {
-						"linkedService": {
-							"referenceName": "BLOB_kidemostorage",
-							"type": "LinkedServiceReference"
-						},
-						"folderPath": "sourcefiles/input"
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
 				"name": "StgtoDim",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "SourcetoStg",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "1.00:00:00",
 					"retry": 0,
