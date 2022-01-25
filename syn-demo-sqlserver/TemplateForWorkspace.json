@@ -88,12 +88,14 @@
 							},
 							"sink": {
 								"type": "SqlDWSink",
+								"preCopyScript": "Truncate table [dbo].[KI_Customer_STG]",
 								"allowPolyBase": true,
 								"polyBaseSettings": {
 									"rejectValue": 0,
 									"rejectType": "value",
 									"useTypeDefault": true
-								}
+								},
+								"disableMetricsCollection": false
 							},
 							"enableStaging": true,
 							"stagingSettings": {
@@ -193,6 +195,41 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "PolybaseCustomerSource",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(activity('PolybaseCustomerSource').output.rowsRead,activity('PolybaseCustomerSource').output.rowsCopied)",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Execute Pipeline1",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Pl_load_customer",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
 					}
 				],
 				"policy": {
@@ -204,7 +241,8 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/CustomerBlobSource')]",
 				"[concat(variables('workspaceId'), '/datasets/CustomerStaging')]",
-				"[concat(variables('workspaceId'), '/linkedServices/linkedServicepolbaseblob')]"
+				"[concat(variables('workspaceId'), '/linkedServices/linkedServicepolbaseblob')]",
+				"[concat(variables('workspaceId'), '/pipelines/Pl_load_customer')]"
 			]
 		},
 		{
@@ -214,52 +252,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "SourcetoStg",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "SourcetoStg",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"CustomerSource": {},
-									"CustomerStage": {}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "BLOB_kidemostorage",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "sourcefiles/input"
-							},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
 						"name": "StgtoDim",
 						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "SourcetoStg",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "1.00:00:00",
 							"retry": 0,
@@ -302,9 +297,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/dataflows/SourcetoStg')]",
-				"[concat(variables('workspaceId'), '/linkedServices/BLOB_kidemostorage')]",
-				"[concat(variables('workspaceId'), '/dataflows/StgtoDim')]"
+				"[concat(variables('workspaceId'), '/dataflows/StgtoDim')]",
+				"[concat(variables('workspaceId'), '/linkedServices/BLOB_kidemostorage')]"
 			]
 		},
 		{
