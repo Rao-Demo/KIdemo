@@ -256,7 +256,7 @@
 						},
 						"inp_SLNo": {
 							"value": {
-								"value": "@activity('LookupSlNo').output.value",
+								"value": "@activity('LookupSlNo').Firstrow.SlNo",
 								"type": "Expression"
 							},
 							"type": "Int32"
