@@ -1,0 +1,14 @@
+{
+	"name": "linkedServiceforpolybase",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://syndemoadlsgen2.dfs.core.windows.net"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
