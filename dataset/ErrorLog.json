@@ -1,0 +1,30 @@
+{
+	"name": "ErrorLog",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalytics1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "SlNo",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Pipelinename",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ErrorMessage",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "KI_Error_Log"
+		}
+	}
+}

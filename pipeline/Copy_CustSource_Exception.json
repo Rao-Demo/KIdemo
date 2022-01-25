@@ -170,6 +170,13 @@
 						"referenceName": "StgtoDim",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "BLOB_kidemostorage",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "sourcefiles/input"
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -196,10 +203,23 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "select ISNULL(Max(SlNo),0)+1 SlNo from [dbo].[KI_Error_Log]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ErrorLog",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
 			},
 			{
-				"name": "Stored procedure1",
+				"name": "Stored procedure",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -216,7 +236,37 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Insert_Error_Log]",
+					"storedProcedureParameters": {
+						"inp_Error": {
+							"value": {
+								"value": "@variables('ErrorDetails')",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"inp_Pipeline": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"inp_SLNo": {
+							"value": {
+								"value": "@activity('LookupSlNo').output",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics1",
+					"type": "LinkedServiceReference"
+				}
 			},
 			{
 				"name": "Set Error Variable",
