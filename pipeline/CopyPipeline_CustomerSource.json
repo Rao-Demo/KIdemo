@@ -1,6 +1,7 @@
 {
 	"name": "CopyPipeline_CustomerSource",
 	"properties": {
+		"description": "The IF condition here checks if the Rows Read and Rows Written are same. Only then it will trigger PI_load_customer.\n\nIf there are Inconsistent data, the incorrect data is written to Blob Storage  - Rejected data..",
 		"activities": [
 			{
 				"name": "PolybaseCustomerSource",
