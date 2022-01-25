@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'syn-demo-sqlserver-WorkspaceDefaultSqlServer'"
 		},
+		"linkedServicepolbaseblob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkedServicepolbaseblob'"
+		},
 		"syn-demo-sqlserver-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://syndemoadlsgen2.dfs.core.windows.net"
@@ -94,10 +98,10 @@
 							"enableStaging": true,
 							"stagingSettings": {
 								"linkedServiceName": {
-									"referenceName": "linkedServiceforpolybase",
+									"referenceName": "linkedServicepolbaseblob",
 									"type": "LinkedServiceReference"
 								},
-								"path": "syndemocontainer/Input"
+								"path": "sourcefiles"
 							},
 							"translator": {
 								"type": "TabularTranslator",
@@ -200,7 +204,7 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/CustomerBlobSource')]",
 				"[concat(variables('workspaceId'), '/datasets/CustomerStaging')]",
-				"[concat(variables('workspaceId'), '/linkedServices/linkedServiceforpolybase')]"
+				"[concat(variables('workspaceId'), '/linkedServices/linkedServicepolbaseblob')]"
 			]
 		},
 		{
@@ -778,6 +782,25 @@
 				"type": "AzureBlobFS",
 				"typeProperties": {
 					"url": "[parameters('linkedServiceforpolybase_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/linkedServicepolbaseblob')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('linkedServicepolbaseblob_connectionString')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",

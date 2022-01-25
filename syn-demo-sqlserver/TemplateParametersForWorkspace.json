@@ -14,6 +14,9 @@
 		"syn-demo-sqlserver-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
+		"linkedServicepolbaseblob_connectionString": {
+			"value": ""
+		},
 		"syn-demo-sqlserver-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://syndemoadlsgen2.dfs.core.windows.net"
 		},
