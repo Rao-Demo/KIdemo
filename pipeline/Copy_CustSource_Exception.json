@@ -145,8 +145,105 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "StgtoDim",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "PolybaseCustomerSource",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "StgtoDim",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "LookupSlNo",
+				"description": "from KI_Error_Log table",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Set Error Variable",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "LookupSlNo",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Set Error Variable",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "PolybaseCustomerSource",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "ErrorDetails",
+					"value": {
+						"value": "@activity('PolybaseCustomerSource').Error.Message",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"variables": {
+			"ErrorDetails": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
