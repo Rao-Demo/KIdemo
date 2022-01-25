@@ -38,12 +38,14 @@
 					},
 					"sink": {
 						"type": "SqlDWSink",
+						"preCopyScript": "Truncate table [dbo].[KI_Customer_STG]",
 						"allowPolyBase": true,
 						"polyBaseSettings": {
 							"rejectValue": 0,
 							"rejectType": "value",
 							"useTypeDefault": true
-						}
+						},
+						"disableMetricsCollection": false
 					},
 					"enableStaging": true,
 					"stagingSettings": {
