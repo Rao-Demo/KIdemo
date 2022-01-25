@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_r7y",
+				"name": "PolybaseCustomerSource",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -33,7 +33,7 @@
 						},
 						"formatSettings": {
 							"type": "DelimitedTextReadSettings",
-							"skipLineCount": 0
+							"skipLineCount": 1
 						}
 					},
 					"sink": {
@@ -48,18 +48,18 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "BLOB_kidemostorage",
+							"referenceName": "syn-demo-sqlserver-WorkspaceDefaultStorage",
 							"type": "LinkedServiceReference"
 						},
-						"path": "sourcefiles/input"
+						"path": "syndemocontainer/Input"
 					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
 							{
 								"source": {
-									"name": "id",
-									"type": "String"
+									"type": "String",
+									"ordinal": 1
 								},
 								"sink": {
 									"name": "CustomerID",
@@ -68,8 +68,8 @@
 							},
 							{
 								"source": {
-									"name": "first_name",
-									"type": "String"
+									"type": "String",
+									"ordinal": 2
 								},
 								"sink": {
 									"name": "FirstName",
@@ -78,8 +78,8 @@
 							},
 							{
 								"source": {
-									"name": "last_name",
-									"type": "String"
+									"type": "String",
+									"ordinal": 3
 								},
 								"sink": {
 									"name": "LastName",
@@ -88,8 +88,8 @@
 							},
 							{
 								"source": {
-									"name": "email",
-									"type": "String"
+									"type": "String",
+									"ordinal": 4
 								},
 								"sink": {
 									"name": "Email",
@@ -98,8 +98,8 @@
 							},
 							{
 								"source": {
-									"name": "gender",
-									"type": "String"
+									"type": "String",
+									"ordinal": 5
 								},
 								"sink": {
 									"name": "Gender",
@@ -108,8 +108,8 @@
 							},
 							{
 								"source": {
-									"name": "country",
-									"type": "String"
+									"type": "String",
+									"ordinal": 6
 								},
 								"sink": {
 									"name": "Country",
@@ -118,8 +118,8 @@
 							},
 							{
 								"source": {
-									"name": "address",
-									"type": "String"
+									"type": "String",
+									"ordinal": 7
 								},
 								"sink": {
 									"name": "Address",
@@ -131,13 +131,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_r7y",
+						"referenceName": "CustomerBlobSource",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_r7y",
+						"referenceName": "CustomerStaging",
 						"type": "DatasetReference"
 					}
 				]
