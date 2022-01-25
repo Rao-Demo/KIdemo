@@ -48,10 +48,10 @@
 					"enableStaging": true,
 					"stagingSettings": {
 						"linkedServiceName": {
-							"referenceName": "linkedServiceforpolybase",
+							"referenceName": "linkedServicepolbaseblob",
 							"type": "LinkedServiceReference"
 						},
-						"path": "syndemocontainer/Input"
+						"path": "sourcefiles"
 					},
 					"translator": {
 						"type": "TabularTranslator",
