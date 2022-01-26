@@ -1052,7 +1052,7 @@
 								"type": "DatasetReference",
 								"parameters": {}
 							},
-							"firstRowOnly": false
+							"firstRowOnly": true
 						}
 					},
 					{
@@ -1093,7 +1093,7 @@
 								},
 								"inp_SLNo": {
 									"value": {
-										"value": "@activity('LookupSlNo').Firstrow.SlNo",
+										"value": "@activity('LookupSlNo').output.firstRow.SlNo",
 										"type": "Expression"
 									},
 									"type": "Int32"
