@@ -1,0 +1,61 @@
+{
+	"name": "SparkPandasDemo",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "SparkDemoPool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "e91b7bd7-4e3a-4f9f-b50a-04abefa3da23"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/bd562028-65bc-4208-a522-8c3cc59ec4b2/resourceGroups/KI_DEV/providers/Microsoft.Synapse/workspaces/syn-demo-sqlserver/bigDataPools/SparkDemoPool",
+				"name": "SparkDemoPool",
+				"type": "Spark",
+				"endpoint": "https://syn-demo-sqlserver.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SparkDemoPool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"data = spark.read.csv('abfss://syndemocontainer@syndemoadlsgen2.dfs.core.windows.net/Input/customer_data.csv')\t# read a simple file\r\n",
+					""
+				],
+				"execution_count": 1
+			}
+		]
+	}
+}
